@@ -34,7 +34,6 @@ pip install -r requirements.txt
 uvicorn Backend.main:app --host 127.0.0.1 --port 8000 --reload
 
 
-
 3. Launch Frontend
 
 ​Open Frontend/index.html via any local server environment or directly through your mobile development file viewer (e.g., Acode/Termux local server or any terminal you like). Ensure the BACKEND_BASE_URL in app.js correctly points to your live Uvicorn address.
@@ -58,3 +57,5 @@ pydantic>=2.0
 
 
 or you can just visit the website 
+
+note: don't forget to injecting the api_key in the terminal 

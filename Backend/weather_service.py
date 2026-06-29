@@ -1,6 +1,5 @@
 import os
 import httpx
-import shutil
 from typing import Dict, Any, Optional, List
 from cachetools import TTLCache
 
@@ -11,12 +10,7 @@ class WeatherService:
         self.geo_url = "https://api.openweathermap.org/geo/1.0/direct"
         self.tile_url = "https://tile.openweathermap.org/map"
         
-        # كاش في الذاكرة لبيانات الطقس النصية (5 دقائق)
         self.cache = TTLCache(maxsize=2048, ttl=300)
-        
-        # إعداد مجلد الكاش الصلب لصور الخرائط (الرادار)
-        self.cache_dir = os.path.join(os.path.dirname(__file__), ".tile_disk_cache")
-        os.makedirs(self.cache_dir, exist_ok=True)
 
     async def fetch_weather_by_coords(self, lat: float, lon: float) -> Optional[Dict[str, Any]]:
         cache_key = (round(lat, 2), round(lon, 2))
@@ -44,37 +38,14 @@ class WeatherService:
             except httpx.RequestError:
                 return []
 
-    # 🗺️ ترقية جلب المربعات بنظام الكاش الصلب المستمر (Disk-Based Cache)
     async def fetch_map_tile(self, layer: str, z: int, x: int, y: int) -> Optional[bytes]:
-        # مسار فريد للصورة على القرص لمنع تداخل الطبقات
-        tile_filename = f"{layer}_{z}_{x}_{y}.png"
-        tile_path = os.path.join(self.cache_dir, tile_filename)
-        
-        # إذا كانت الصورة موجودة محلياً على الهاتف، اقرأها فوراً من القرص O(1) دون استهلاك إنترنت
-        if os.path.exists(tile_path):
-            with open(tile_path, "rb") as f:
-                return f.read()
-
-        # إذا لم تكن موجودة، اطلبها من السيرفر الخارجي بأمان
         url = f"{self.tile_url}/{layer}/{z}/{x}/{y}.png"
         params = {'appid': self.api_key}
         async with httpx.AsyncClient() as client:
             try:
                 response = await client.get(url, params=params, timeout=10.0)
                 if response.status_code == 200:
-                    tile_bytes = response.content
-                    
-                    # حفظ الصورة على القرص للاستخدامات المستقبلية
-                    with open(tile_path, "wb") as f:
-                        f.write(tile_bytes)
-                        
-                    return tile_bytes
+                    return response.content
                 return None
             except httpx.RequestError:
                 return None
-
-    def clear_disk_cache(self):
-        """دالة اختيارية لتنظيف مساحة الهاتف عند الحاجة"""
-        if os.path.exists(self.cache_dir):
-            shutil.rmtree(self.cache_dir)
-            os.makedirs(self.cache_dir, exist_ok=True)

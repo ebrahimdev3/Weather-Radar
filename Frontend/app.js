@@ -1,25 +1,21 @@
 const BACKEND_BASE_URL = "http://127.0.0.1:8000";
 
-// 1️⃣ تهيئة الخريطة وإلغاء التحكم القياسي بالزوم لإعادة موضعه بالأسفل
 const map = L.map('map', {
     zoomControl: false 
 }).setView([12.63, -8.00], 5);
 
-// نقل أزرار التحكم +- لأسفل يسار الشاشة لتجنب التداخل العلوي
 L.control.zoom({
     position: 'bottomleft'
 }).addTo(map);
 
-// 🌍 2️⃣ طبقة الأقمار الصناعية الحقيقية والتضاريس مع تفعيل كاش المتصفح (IndexedDB)
 L.tileLayer('https://mt1.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
     attribution: '&copy; Google Maps',
     maxZoom: 20,
-    useCache: true,         // تشغيل التخزين المحلي في المتصفح
-    crossOrigin: true,      // السماح بتخزين الصور دون قيود الحماية
-    cacheMaxAge: 604800000  // الاحتفاظ بالخريطة لمدة أسبوع كامل (بالملي ثانية)
+    useCache: true,         
+    crossOrigin: true,      
+    cacheMaxAge: 604800000  
 }).addTo(map);
 
-// 🗺️ 3️⃣ إضافة طبقة الأسماء الشفافة فوق القمر الصناعي مع تفعيل كاش المتصفح أيضاً
 L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_only_labels/{z}/{x}/{y}{r}.png', {
     subdomains: 'abcd',
     maxZoom: 20,
@@ -35,7 +31,6 @@ let currentOpacity = 0.75;
 let currentLayerType = 'temp';
 let isAnimating = false; 
 
-// 🎨 4️⃣ إعدادات تدرجات الألوان فائقة الوضوح (High Contrast) لإبراز المسارات الجوية والخطوط الكنتورية
 const legendConfigs = {
     temp: { 
         title: "🌡️ Thermal Tracks & Contours", 
@@ -64,7 +59,6 @@ const sidebar = document.getElementById('sidebar-control');
 document.getElementById('menu-toggle').addEventListener('click', () => sidebar.classList.add('active'));
 document.getElementById('close-sidebar').addEventListener('click', () => sidebar.classList.remove('active'));
 
-// 🔄 5️⃣ دالة تحديث واستدعاء طبقات الطقس مع ضمان بقاء الفلتر البصري مفعلاً أثناء الكاش
 function updateWeatherLayer(layerType) {
     currentLayerType = layerType;
     if (currentWeatherDataLayer) {
@@ -78,12 +72,11 @@ function updateWeatherLayer(layerType) {
     currentWeatherDataLayer = L.tileLayer(`${BACKEND_BASE_URL}/api/tiles/${layerName}/{z}/{x}/{y}.png`, {
         opacity: currentOpacity,
         zIndex: 500,
-        useCache: true,        // تفعيل كاش المتصفح لبيانات الطقس
+        useCache: true,        
         crossOrigin: true,
-        cacheMaxAge: 1800000   // حفظ طبقة الطقس لمدة 30 دقيقة فقط لأنها متغيرة باستمرار
+        cacheMaxAge: 1800000   
     });
 
-    // ⚡ ربط الفلتر يدوياً عند تحميل البلاطة لضمان تطبيق كلاس التباين والمسارات من الـ CSS
     currentWeatherDataLayer.on('tileload', function(event) {
         event.tile.classList.add('high-contrast-radar');
     });
@@ -99,7 +92,6 @@ function updateWeatherLayer(layerType) {
     labels[2].innerText = config.max;
 }
 
-// ▶️ 6️⃣ تأثير حركة نبض الرادار الانسيابي للمسارات الجوية
 function startRadarAnimation() {
     if (animationInterval) clearInterval(animationInterval);
     let pulseUp = false;
@@ -136,7 +128,6 @@ document.getElementById('radar-toggle').addEventListener('click', (e) => {
     }
 });
 
-// تشغيل الطبقة الابتدائية فوراً عند التحميل
 updateWeatherLayer('temp');
 
 document.querySelectorAll('input[name="weather-layer"]').forEach(radio => {
@@ -151,7 +142,6 @@ document.getElementById('opacity-slider').addEventListener('input', (e) => {
     }
 });
 
-// 📊 7️⃣ جلب وعرض بيانات الطقس عند النقر على الخريطة
 async function fetchAndShowWeather(lat, lon, cityName = null) {
     const loadingPopup = L.popup().setLatLng([lat, lon]).setContent("Syncing data...").openOn(map);
 
@@ -177,7 +167,6 @@ async function fetchAndShowWeather(lat, lon, cityName = null) {
 
 map.on('click', (e) => fetchAndShowWeather(e.latlng.lat, e.latlng.lng));
 
-// 🔍 8️⃣ محرك البحث عن المدن
 async function searchCity() {
     const cityInput = document.getElementById('city-input');
     const city = cityInput.value.trim();

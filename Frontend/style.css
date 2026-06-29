@@ -7,7 +7,6 @@ body {
     overflow: hidden;
 }
 
-/* الحاوية العلوية الرئيسية المرنة */
 .top-header-bar {
     position: absolute;
     top: 15px;
@@ -22,7 +21,6 @@ body {
     gap: 10px;
 }
 
-/* زر القائمة المطور (أيقونة الثلاثة خطوط الدائرية المتناسقة) */
 .menu-toggle {
     background: #2563eb;
     color: white;
@@ -45,7 +43,6 @@ body {
     background: #1d4ed8;
 }
 
-/* صندوق البحث مع تعتيم قوي ليتناسب مع ألوان الخريطة الحقيقية */
 .search-container {
     display: flex;
     flex: 1;
@@ -84,7 +81,6 @@ body {
     flex-shrink: 0;
 }
 
-/* القائمة الجانبية (Sidebar) */
 .sidebar-control {
     position: absolute;
     top: 0;
@@ -184,7 +180,6 @@ body {
     width: 100%;
 }
 
-/* دليل الألوان مع تعتيم قوي لعزله عن ألوان الأرض الخلفية */
 .weather-legend {
     position: absolute;
     bottom: 30px;
@@ -217,7 +212,6 @@ body {
     margin-top: 4px;
 }
 
-/* حاوية الخريطة الأساسية */
 #map {
     height: 100vh;
     width: 100%;
@@ -235,7 +229,7 @@ body {
         font-size: 11px;
     }
 }
-/* زيادة حدة وتباين ألوان رادار الطقس لإبراز المسارات الجوية والخطوط الكنتورية */
+
 .high-contrast-radar {
-    filter: saturate(1.8) contrast(1.25) drop-shadow(0px 0px 1px rgba(0, 0, 0, 0.5));
+    filter: saturate(1.8) contrast(1.25) drop-shadow(0px 0px 1px rgba(0, 0, 0, 0.5)) !important;
 }

@@ -1,14 +1,11 @@
 class WeatherData:
-    """
-    طبقة معالجة البيانات وتحويل الهيكل القادم من خوادم الطقس.
-    Space Complexity: O(1)
-    """
+    
     def __init__(self, raw_data: dict):
-        # التحقق من كود الاستجابة الصادر من OpenWeatherMap
+        
         self.is_valid = bool(raw_data and str(raw_data.get('cod')) == '200')
         
         if self.is_valid:
-            # معالجة حالة المحيطات المفتوحة التي لا تحتوي على اسم مدينة
+            
             self.city = raw_data.get('name') if raw_data.get('name') else "Open Ocean"
             self.temperature = raw_data.get('main', {}).get('temp')
             self.humidity = raw_data.get('main', {}).get('humidity')
