@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced Weather Radar Dashboard</title>
+    
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pouchdb/7.3.1/pouchdb.min.js"></script>
+    <script src="https://unpkg.com/leaflet.tilelayer.pouchdbcached@1.0.0/L.TileLayer.PouchDBCached.js"></script>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="top-header-bar">
+        <button id="menu-toggle" class="menu-toggle">☰</button>
+        
+        <div class="search-container">
+            <input type="text" id="city-input" placeholder="Enter city...">
+            <button id="search-btn">Search</button>
+        </div>
+    </div>
+
+    <div id="sidebar-control" class="sidebar-control">
+        <div class="sidebar-header">
+            <h3>Radar Settings</h3>
+            <button id="close-sidebar" class="close-sidebar">✕</button>
+        </div>
+        
+        <hr class="divider">
+
+        <div class="control-section">
+            <h4>Atmospheric Layers</h4>
+            <label><input type="radio" name="weather-layer" value="temp" checked> 🌡️ Thermal Imaging</label>
+            <label><input type="radio" name="weather-layer" value="precipitation"> 🌧️ Satellite Rain Radar</label>
+            <label><input type="radio" name="weather-layer" value="wind"> 💨 Airflow Circulation</label>
+        </div>
+        
+        <hr class="divider">
+        
+        <div class="control-section">
+            <h4>Dynamic Time Loop</h4>
+            <div class="animation-controls">
+                <button id="radar-toggle" class="radar-toggle-btn btn-stopped">▶ Live Stream</button>
+            </div>
+        </div>
+        
+        <hr class="divider">
+        
+        <div class="control-section">
+            <label for="opacity-slider" class="slider-label">Layer Density: <span id="opacity-val">75%</span></label>
+            <input type="range" id="opacity-slider" min="10" max="100" value="75">
+        </div>
+    </div>
+
+    <div id="weather-legend" class="weather-legend">
+        <div id="legend-title">Thermal Imaging</div>
+        <div class="legend-bar"></div>
+        <div class="legend-labels">
+            <span>Cold</span>
+            <span>Mild</span>
+            <span>Hot</span>
+        </div>
+    </div>
+
+    <div id="map"></div>
+
+    <script src="app.js"></script>
+</body>
+</html>
