@@ -3,8 +3,8 @@ import sys
 from fastapi import FastAPI, HTTPException, Query, Response
 from fastapi.middleware.cors import CORSMiddleware
 
-from weather_service import WeatherService
-from weather_model import WeatherData
+from Backend.weather_service import WeatherService
+from Backend.weather_model import WeatherData
 
 API_KEY = os.environ.get("WEATHER_API_KEY") or os.environ.get("OPENWEATHER_API_KEY")
 
